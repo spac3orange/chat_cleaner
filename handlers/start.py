@@ -24,6 +24,8 @@ async def start(message: Message, state: FSMContext):
 
 @router.message(lambda message: message.chat.type in ['group', 'supergroup'])
 async def monitor_messages(message: Message):
+    if message.text.endswith('joined the group'):
+        return
     admin_list = await get_chat_administrators(message.chat.id)
     print(admin_list)
     if message.from_user.id in admin_list:
