@@ -24,10 +24,14 @@ async def start(message: Message, state: FSMContext):
 
 @router.message(lambda message: message.chat.type in ['group', 'supergroup'])
 async def monitor_messages(message: Message):
-    if message.text is not None:
-        if message.text.endswith('joined the group'):
-            await aiogram_bot.delete_message(message.chat.id, message.message_id)
-            return
+    if message.new_chat_members:
+        for new_member in message.new_chat_members:
+            try:
+                await aiogram_bot.delete_message(message.chat.id, message.message_id)
+                logger.info(f"Deleted 'user joined the group' message for {new_member.username}")
+            except Exception as e:
+                logger.error(f"Failed to delete 'user joined the group' message: {e}")
+        return
     admin_list = await get_chat_administrators(message.chat.id)
     print(admin_list)
     if message.from_user.id in admin_list:
