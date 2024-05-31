@@ -26,6 +26,7 @@ async def start(message: Message, state: FSMContext):
 async def monitor_messages(message: Message):
     if message.text is not None:
         if message.text.endswith('joined the group'):
+            await aiogram_bot.delete_message(message.chat.id, message.message_id)
             return
     admin_list = await get_chat_administrators(message.chat.id)
     print(admin_list)
