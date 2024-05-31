@@ -24,8 +24,9 @@ async def start(message: Message, state: FSMContext):
 
 @router.message(lambda message: message.chat.type in ['group', 'supergroup'])
 async def monitor_messages(message: Message):
-    if message.text.endswith('joined the group'):
-        return
+    if message.text is not None:
+        if message.text.endswith('joined the group'):
+            return
     admin_list = await get_chat_administrators(message.chat.id)
     print(admin_list)
     if message.from_user.id in admin_list:
@@ -36,7 +37,7 @@ async def monitor_messages(message: Message):
             await aiogram_bot.delete_message(message.chat.id, message.message_id)
             promo_text = 'Хотите опубликовать рекламу? \nПишите https://t.me/next_it_alex'
             rekl = await aiogram_bot.send_message(message.chat.id, text=promo_text)
-            await asyncio.sleep(2)
+            await asyncio.sleep(5)
             await aiogram_bot.delete_message(message.chat.id, rekl.message_id)
         else:
             pass
