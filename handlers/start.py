@@ -3,6 +3,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from config import aiogram_bot
+import asyncio
 
 from config import logger
 
@@ -31,5 +32,9 @@ async def monitor_messages(message: Message):
         if message.text != '+':
             logger.info(f'message deleted {message.text}')
             await aiogram_bot.delete_message(message.chat.id, message.message_id)
+            promo_text = 'Хотите опубликовать рекламу? \nПишите https://t.me/next_it_alex'
+            rekl = await aiogram_bot.send_message(message.chat.id, text=promo_text)
+            await asyncio.sleep(2)
+            await aiogram_bot.delete_message(message.chat.id, rekl.message_id)
         else:
             pass
